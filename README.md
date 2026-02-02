@@ -218,20 +218,5 @@ jupyter notebook heart_disease_lr_analysis.ipynb
 
 ---
 
-## Requirements
 
-- Python 3.8+
-- NumPy
-- Pandas
-- Matplotlib
-- Jupyter Notebook
 
----
-
-## Author
-
-Juan Esteban Arevalo Pabon  
-Escuela Colombiana de Ingenieria Julio Garavito  
-AREP Course - 2026
-
----
