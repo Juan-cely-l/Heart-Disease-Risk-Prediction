@@ -10,6 +10,7 @@ A complete implementation of Logistic Regression from scratch using NumPy for pr
 - [Dataset Description](#dataset-description)
 - [Project Structure](#project-structure)
 - [Implementation Details](#implementation-details)
+- [Step 5: Amazon SageMaker Deployment](#step-5-amazon-sagemaker-deployment)
 - [Results Summary](#results-summary)
 - [How to Run](#how-to-run)
 - [Requirements](#requirements)
@@ -71,6 +72,18 @@ Heart-Disease-Risk-Prediction/
 |-- heart_disease_lr_analysis.ipynb    # Main Jupyter notebook with full analysis
 |-- Heart_Disease_Prediction.csv       # Dataset file
 |-- README.md                          # Project documentation
+|-- ASSETS/                            # SageMaker deployment evidence images
+|   |-- IMAGE1.jpeg
+|   |-- imagen2.png
+|   |-- imagen3.png
+|   |-- imagen4.png
+|   |-- imagen5.png
+|   |-- imagen6.png
+|-- model_params.json                  # Exported model configuration
+|-- model_weights.npy                  # Exported model weights
+|-- model_bias.npy                     # Exported model bias
+|-- normalization_mu.npy               # Z-score mean values
+|-- normalization_sigma.npy            # Z-score standard deviation
 |-- .gitignore                         # Git ignore file
 ```
 
@@ -158,6 +171,114 @@ dw += (lambda / m) * w
 - For this dataset, lambda between 0.01 and 0.1 provides good balance
 - No significant overfitting detected (test accuracy >= train accuracy)
 
+### Step 5: Amazon SageMaker Deployment
+
+The best model was exported and deployed to Amazon SageMaker for real-time inference.
+
+#### 5.1 Model Export
+
+Exported model artifacts as NumPy arrays:
+
+| File | Description |
+|------|-------------|
+| `model_weights.npy` | Feature weights (6 values) |
+| `model_bias.npy` | Bias term |
+| `model_params.json` | Complete model configuration |
+| `normalization_mu.npy` | Z-score mean values |
+| `normalization_sigma.npy` | Z-score standard deviation |
+
+#### 5.2 Inference Handler
+
+Created `inference.py` implementing the SageMaker inference protocol:
+
+```python
+def model_fn(model_dir):      # Load model artifacts from S3
+def input_fn(request_body):   # Parse JSON input
+def predict_fn(input_data):   # Generate predictions using sigmoid
+def output_fn(prediction):    # Format JSON response
+```
+
+#### 5.3 Deployment Process
+
+1. **Created SageMaker Notebook Instance** (ml.t3.medium)
+2. **Packaged Model Artifacts** into `model.tar.gz`
+3. **Uploaded to S3** bucket
+4. **Deployed SKLearnModel** to endpoint (ml.m5.large)
+
+#### 5.4 Deployment Evidence
+
+**SageMaker Notebook Instance Creation:**
+
+![SageMaker Notebook Instance](ASSETS/IMAGE1.jpeg)
+
+**Model Packaging and S3 Upload:**
+![Model Training](ASSETS/imagen2.png)
+
+
+**Model Training and Export in SageMaker:**
+
+![S3 Upload](ASSETS/imagen3.png)
+
+
+**Endpoint Testing with Sample Patient:**
+
+![Endpoint Deployment](ASSETS/imagen4.png)
+
+
+**inference.py:**
+![Endpoint Ready](ASSETS/imagen5.png)
+
+
+**Endpoint Status - InService:**
+
+![Endpoint Test](ASSETS/imagen6.png)
+
+#### 5.5 Endpoint Testing Results
+
+**Test Request (Age=60, High Risk Profile):**
+
+```json
+{
+    "Thallium": 7,
+    "Number of vessels fluro": 2,
+    "Chest pain type": 4,
+    "Exercise angina": 1,
+    "Sex": 1,
+    "Age": 60
+}
+```
+
+**Endpoint Response:**
+
+```json
+{
+    "probability": 0.9698097213922604,
+    "prediction": 1,
+    "risk_level": "High Risk"
+}
+```
+
+**Result:** Patient with Age=60 and high-risk factors has **96.98% probability** of heart disease.
+
+#### 5.6 Feature Input Format
+
+| Feature | Type | Values |
+|---------|------|--------|
+| Thallium | Integer | 3 (Normal), 6 (Fixed defect), 7 (Reversible defect) |
+| Number of vessels fluro | Integer | 0-3 |
+| Chest pain type | Integer | 1-4 (4 = Asymptomatic) |
+| Exercise angina | Integer | 0 (No), 1 (Yes) |
+| Sex | Integer | 0 (Female), 1 (Male) |
+| Age | Integer | Patient age in years |
+
+#### 5.7 Instance Types Explored
+
+| Instance Type | vCPU | Memory | Use Case |
+|--------------|------|--------|----------|
+| ml.t2.medium | 2 | 4 GB | Development/Testing |
+| ml.t3.medium | 2 | 4 GB | Notebook Instance |
+| ml.m5.large | 2 | 8 GB | Endpoint Deployment |
+
 ---
 
 ## Results Summary
@@ -218,5 +339,18 @@ jupyter notebook heart_disease_lr_analysis.ipynb
 
 ---
 
+## Requirements
 
+- Python 3.8+
+- NumPy
+- Pandas
+- Matplotlib
+- Jupyter Notebook
+
+For SageMaker deployment:
+- boto3
+- sagemaker
+- AWS Account with SageMaker access
+
+---
 
