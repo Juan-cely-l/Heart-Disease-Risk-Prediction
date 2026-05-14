@@ -1,356 +1,230 @@
 # Heart Disease Risk Prediction
 
-A complete implementation of Logistic Regression from scratch using NumPy for predicting heart disease presence based on clinical features.
+Sistema académico de analítica predictiva para estimar riesgo de enfermedad cardiaca con regresión logística interpretable, datos clínicos estructurados y una proyección responsable hacia despliegue en la nube.
 
----
+> Este proyecto es un prototipo educativo de apoyo analítico. No reemplaza criterio médico, diagnóstico clínico ni evaluación profesional de salud.
 
-## Table of Contents
+## Resumen Ejecutivo
 
-- [Project Overview](#project-overview)
-- [Dataset Description](#dataset-description)
-- [Project Structure](#project-structure)
-- [Implementation Details](#implementation-details)
-- [Step 5: Amazon SageMaker Deployment](#step-5-amazon-sagemaker-deployment)
-- [Results Summary](#results-summary)
-- [How to Run](#how-to-run)
-- [Requirements](#requirements)
-- [Author](#author)
+Las enfermedades cardiovasculares siguen siendo una de las problemáticas de salud más críticas del mundo. Según la OMS, son la principal causa de muerte global y en 2022 causaron cerca de 19.8 millones de muertes, equivalentes a aproximadamente el 32% de las muertes mundiales. La misma fuente resalta la importancia de detectar el riesgo cardiovascular de forma temprana para iniciar manejo, consejería y tratamiento oportunos.
 
----
+Este proyecto aborda esa necesidad desde Ingeniería de Sistemas, seguridad y datos: construye un pipeline de machine learning con NumPy, Pandas y Matplotlib para analizar variables clínicas, entrenar un modelo de regresión logística, evaluar su desempeño, interpretar los factores de riesgo y exportar artefactos listos para inferencia.
 
-## Project Overview
+## Problema Que Resuelve
 
-Heart disease is the world's leading cause of death, claiming approximately 18 million lives each year according to the World Health Organization. This project implements a complete machine learning pipeline for heart disease prediction using only NumPy, Pandas, and Matplotlib (no scikit-learn for core training).
+Muchas decisiones preventivas en salud cardiovascular llegan tarde porque los datos clínicos disponibles no siempre se convierten en señales tempranas, comprensibles y accionables. El problema no es solo predecir: es convertir datos en una alerta interpretable, reproducible y segura que pueda apoyar decisiones humanas.
 
-**Key Features:**
-- Logistic Regression implemented from scratch
-- Comprehensive Exploratory Data Analysis (EDA)
-- Decision boundary visualization for multiple feature pairs
-- L2 Regularization with hyperparameter tuning
-- Model evaluation with multiple metrics
+El proyecto propone una base técnica para responder:
 
----
+- ¿Qué variables clínicas se relacionan más con presencia de enfermedad cardiaca?
+- ¿Cómo estimar una probabilidad de riesgo con un modelo entendible?
+- ¿Cómo preparar un modelo para un entorno de inferencia controlado?
+- ¿Qué controles de seguridad y gobierno de datos serían necesarios antes de llevarlo a producción?
 
-## Dataset Description
+## Solución Propuesta
 
-**Source:** [Kaggle - Heart Disease Prediction Dataset](https://www.kaggle.com/datasets/neurocipher/heartdisease)
+El repositorio implementa un flujo completo de analítica predictiva:
 
-The dataset contains 270 patient records with 14 clinical attributes used to predict the presence or absence of heart disease.
+1. Carga del dataset `Heart_Disease_Prediction.csv`.
+2. Limpieza y transformación del objetivo `Heart Disease` a variable binaria.
+3. Análisis exploratorio de datos, distribución de clases, correlaciones y outliers.
+4. Selección de seis variables clínicas relevantes:
+   - `Thallium`
+   - `Number of vessels fluro`
+   - `Chest pain type`
+   - `Exercise angina`
+   - `Sex`
+   - `Age`
+5. División estratificada entrenamiento/prueba.
+6. Normalización Z-score usando estadísticas del conjunto de entrenamiento.
+7. Implementación de regresión logística desde cero con NumPy.
+8. Evaluación con accuracy, precision, recall, F1-score y matriz de confusión.
+9. Regularización L2 y comparación de valores de lambda.
+10. Exportación de pesos, sesgo y parámetros de normalización para inferencia.
+11. Documentación de despliegue explorado en Amazon SageMaker mediante capturas en `ASSETS/`.
 
-### Feature Dictionary
+## Resultado Actual
 
-| Feature | Description |
-|---------|-------------|
-| Age | Age of the patient (years) |
-| Sex | Gender (1 = Male, 0 = Female) |
-| Chest pain type | 1 = Typical angina, 2 = Atypical angina, 3 = Non-anginal pain, 4 = Asymptomatic |
-| BP | Resting blood pressure (mm Hg) |
-| Cholesterol | Serum cholesterol level (mg/dL) |
-| FBS over 120 | Fasting blood sugar > 120 mg/dL (1 = True, 0 = False) |
-| EKG results | 0 = Normal, 1 = ST-T abnormality, 2 = Left ventricular hypertrophy |
-| Max HR | Maximum heart rate achieved |
-| Exercise angina | Exercise-induced angina (1 = Yes, 0 = No) |
-| ST depression | ST depression induced by exercise relative to rest |
-| Slope of ST | Slope of the peak exercise ST segment |
-| Number of vessels fluro | Major vessels (0-3) colored by fluoroscopy |
-| Thallium | Thallium stress test result |
-| Heart Disease | Target: Presence / Absence |
+El análisis documentado reporta un desempeño aproximado de 88.89% de accuracy en el conjunto de prueba para el modelo principal. La matriz de confusión incluida en la documentación del notebook muestra:
 
-### Dataset Statistics
+| Clase real / predicha | Predicho sin enfermedad | Predicho con enfermedad |
+| --- | ---: | ---: |
+| Sin enfermedad | 42 | 3 |
+| Con enfermedad | 6 | 30 |
 
-- **Total samples:** 270
-- **Class distribution:** 55.6% No Disease / 44.4% Disease (balanced)
-- **Missing values:** None
-- **Train/Test split:** 70/30 (stratified)
+Interpretación académica: el modelo logra una base predictiva prometedora para un prototipo, pero requiere validación con más datos, revisión clínica, evaluación de sesgos y monitoreo antes de cualquier uso real.
 
----
+## Usuarios Beneficiados
 
-## Project Structure
+- **Estudiantes y docentes:** como caso práctico de machine learning interpretable aplicado a salud.
+- **Analistas de datos:** como ejemplo de flujo reproducible desde EDA hasta exportación de modelo.
+- **Equipos de salud digital:** como base conceptual para herramientas de apoyo a prevención.
+- **Instituciones de salud:** como proyección futura para priorizar tamizajes, seguimiento preventivo o alertas tempranas, siempre con supervisión médica.
 
+## Propuesta de Valor
+
+El valor del proyecto está en unir tres dimensiones:
+
+- **Datos:** convierte variables clínicas en evidencia cuantitativa.
+- **Seguridad:** reconoce que los datos de salud requieren confidencialidad, control de acceso y despliegue responsable.
+- **Ingeniería de Sistemas:** organiza el proceso como un sistema reproducible, evaluable y proyectable a infraestructura cloud.
+
+A diferencia de un modelo de caja negra, la regresión logística permite explicar qué variables empujan la predicción hacia mayor o menor riesgo.
+
+## Tendencia Tecnológica Seleccionada
+
+**IA confiable y explicable para salud predictiva.**
+
+Es la tendencia más coherente con este repositorio porque el proyecto ya trabaja con predicción de riesgo en salud, interpretación de variables clínicas, métricas de desempeño y una proyección de despliegue en cloud. La tendencia exige que los sistemas de IA en salud no solo sean precisos, sino también entendibles, seguros, auditables y centrados en las personas.
+
+### Tres Características Principales
+
+1. **Explicabilidad e interpretabilidad:** las predicciones deben poder explicarse para que médicos, pacientes y equipos técnicos entiendan qué factores influyen en el riesgo.
+2. **Seguridad, privacidad y gobierno de datos:** los datos clínicos deben protegerse con controles de acceso, cifrado, trazabilidad y reglas claras de uso.
+3. **Validación continua y supervisión humana:** el modelo debe evaluarse con métricas, monitoreo, revisión de sesgos y participación de profesionales de salud antes de impactar decisiones reales.
+
+## Arquitectura General
+
+```text
+Dataset CSV
+    |
+    v
+Notebook de analisis y entrenamiento
+    |
+    |-- Limpieza del objetivo
+    |-- EDA y correlaciones
+    |-- Seleccion de variables
+    |-- Split estratificado
+    |-- Normalizacion Z-score
+    |-- Regresion logistica con NumPy
+    |-- Regularizacion L2
+    v
+Evaluacion del modelo
+    |
+    |-- Accuracy / Precision / Recall / F1
+    |-- Matriz de confusion
+    |-- Interpretacion de coeficientes
+    v
+Artefactos exportados
+    |
+    |-- model_params.json
+    |-- model_weights.npy
+    |-- model_bias.npy
+    |-- normalization_mu.npy
+    |-- normalization_sigma.npy
+    v
+Proyeccion de inferencia
+    |
+    |-- Handler documentado en el notebook
+    |-- Evidencia visual de SageMaker en ASSETS/
 ```
+
+## Flujo de Datos
+
+1. El archivo `Heart_Disease_Prediction.csv` entrega 270 registros con variables clínicas.
+2. La columna `Heart Disease` se estandariza y se convierte a `Heart Disease_bin`.
+3. El notebook revisa calidad de datos: nulos, duplicados, distribución y correlaciones.
+4. Se seleccionan seis variables predictoras por relevancia estadística e interpretabilidad.
+5. Se divide el dataset en entrenamiento y prueba con proporción 70/30 estratificada.
+6. Se calculan `mu` y `sigma` solo sobre entrenamiento para evitar fuga de datos.
+7. Se entrena el modelo y se evalúa sobre datos no usados para entrenar.
+8. Se exportan los artefactos necesarios para reproducir inferencias.
+9. Una inferencia esperada recibe un JSON clínico, normaliza los valores, calcula probabilidad y retorna nivel de riesgo.
+
+## Decisiones y Riesgos de Seguridad
+
+Estado actual:
+
+- El dataset del repositorio no incluye identificadores personales directos.
+- No existe una API productiva local en el repositorio; el flujo principal vive en el notebook.
+- El notebook documenta un handler de inferencia para SageMaker, pero `inference.py` no está persistido como archivo independiente en la raíz.
+- Los archivos del modelo están versionados como artefactos académicos.
+
+Controles necesarios antes de producción:
+
+- Cifrado de datos en reposo y en tránsito.
+- IAM de mínimo privilegio para notebooks, buckets y endpoints cloud.
+- Validación estricta del payload de entrada.
+- Evitar logs con datos clínicos sensibles.
+- Monitoreo de drift, desempeño y falsos negativos.
+- Auditoría de accesos e inferencias.
+- Revisión de sesgos por edad, sexo y subpoblaciones.
+- Consentimiento, anonimización y cumplimiento normativo si se usan datos reales de pacientes.
+
+## Alcance y Limitaciones
+
+Implementado:
+
+- Notebook completo de análisis, entrenamiento y evaluación.
+- Regresión logística desde cero con NumPy.
+- Regularización L2.
+- Visualizaciones y explicación de variables.
+- Exportación de artefactos del modelo.
+- Evidencia visual de exploración de despliegue en SageMaker.
+
+No implementado como código independiente:
+
+- API web local.
+- Interfaz gráfica.
+- Pipeline automatizado de CI/CD.
+- Validación clínica externa.
+- Monitoreo productivo del modelo.
+- Archivo `inference.py` separado del notebook.
+
+## Estructura del Proyecto
+
+```text
 Heart-Disease-Risk-Prediction/
-|-- heart_disease_lr_analysis.ipynb    # Main Jupyter notebook with full analysis
-|-- Heart_Disease_Prediction.csv       # Dataset file
-|-- README.md                          # Project documentation
-|-- ASSETS/                            # SageMaker deployment evidence images
-|   |-- IMAGE1.jpeg
-|   |-- imagen2.png
-|   |-- imagen3.png
-|   |-- imagen4.png
-|   |-- imagen5.png
-|   |-- imagen6.png
-|-- model_params.json                  # Exported model configuration
-|-- model_weights.npy                  # Exported model weights
-|-- model_bias.npy                     # Exported model bias
-|-- normalization_mu.npy               # Z-score mean values
-|-- normalization_sigma.npy            # Z-score standard deviation
-|-- .gitignore                         # Git ignore file
+|-- heart_disease_lr_analysis.ipynb   # Notebook principal de analisis y entrenamiento
+|-- Heart_Disease_Prediction.csv      # Dataset clinico usado por el notebook
+|-- model_params.json                 # Configuracion exportada del modelo
+|-- model_weights.npy                 # Pesos del modelo
+|-- model_bias.npy                    # Sesgo del modelo
+|-- normalization_mu.npy              # Medias para normalizacion
+|-- normalization_sigma.npy           # Desviaciones estandar para normalizacion
+|-- ASSETS/                           # Capturas de evidencia del despliegue explorado
+|-- docs/
+|   |-- SUSTENTACION.md               # Base academica de la presentacion oral
+|   |-- GUION_ORAL.md                 # Guion oral de alto impacto
+|   |-- PROMPT_GAMMA.md               # Prompt listo para generar diapositivas
+|-- README.md                         # Documentacion principal
+|-- .gitignore
 ```
 
----
+## Cómo Ejecutar
 
-## Implementation Details
+Crear y activar un entorno virtual:
 
-### Step 1: Data Loading and Preparation
-
-- Loaded dataset from CSV file
-- Binarized target column (Presence = 1, Absence = 0)
-- Performed comprehensive EDA including:
-  - Distribution analysis of numerical features
-  - Correlation matrix visualization
-  - Outlier detection with boxplots
-  - Class balance verification
-- Applied 70/30 stratified train/test split
-- Z-score normalization using training set statistics
-
-**Selected Features (6):** Thallium, Number of vessels fluro, Chest pain type, Exercise angina, Sex, Age
-
-### Step 2: Basic Logistic Regression
-
-Implemented from scratch:
-
-- **Sigmoid function:** Maps linear output to probability [0,1]
-- **Cost function:** Binary cross-entropy loss
-- **Gradient descent:** Iterative optimization with configurable learning rate
-
-**Training Configuration:**
-- Learning rate (alpha): 0.01
-- Iterations: 2000
-- Initial weights: zeros
-
-**Model Performance (Unregularized):**
-
-| Metric | Train | Test |
-|--------|-------|------|
-| Accuracy | 81.48% | 88.89% |
-| Precision | 81.82% | 90.91% |
-| Recall | 75.00% | 83.33% |
-| F1-Score | 78.26% | 86.96% |
-
-### Step 3: Decision Boundary Visualization
-
-Trained separate 2D models for 4 feature pairs:
-
-1. **Thallium vs Number of vessels fluro** - Train Accuracy: 76.7%
-2. **Thallium vs Age** - Train Accuracy: 75.7%
-3. **Chest pain type vs Age** - Train Accuracy: 70.9%
-4. **Number of vessels fluro vs Age** - Train Accuracy: 71.4%
-
-Each visualization includes:
-- Decision boundary line (threshold = 0.5)
-- Color-coded decision regions
-- Scatter plot with true class labels
-
-### Step 4: L2 Regularization
-
-**Regularized Cost Function:**
-
-```
-J_reg = J + (lambda / 2m) * ||w||^2
-```
-
-**Gradient Update:**
-
-```
-dw += (lambda / m) * w
-```
-
-**Hyperparameter Tuning Results:**
-
-| Lambda | Train Acc | Test Acc | Weight Norm | Norm Reduction |
-|--------|-----------|----------|-------------|----------------|
-| 0 | 81.48% | 88.89% | 1.4989 | 0.0% |
-| 0.001 | 81.48% | 88.89% | 1.4988 | 0.0% |
-| 0.01 | 81.48% | 88.89% | 1.4982 | 0.0% |
-| 0.1 | 81.48% | 88.89% | 1.4920 | 0.5% |
-| 1 | 82.01% | 88.89% | 1.4355 | 4.2% |
-
-**Key Findings:**
-- Test accuracy remains stable at 88.89% across all lambda values
-- Weight norm decreases monotonically with increasing regularization
-- For this dataset, lambda between 0.01 and 0.1 provides good balance
-- No significant overfitting detected (test accuracy >= train accuracy)
-
-### Step 5: Amazon SageMaker Deployment
-
-The best model was exported and deployed to Amazon SageMaker for real-time inference.
-
-#### 5.1 Model Export
-
-Exported model artifacts as NumPy arrays:
-
-| File | Description |
-|------|-------------|
-| `model_weights.npy` | Feature weights (6 values) |
-| `model_bias.npy` | Bias term |
-| `model_params.json` | Complete model configuration |
-| `normalization_mu.npy` | Z-score mean values |
-| `normalization_sigma.npy` | Z-score standard deviation |
-
-#### 5.2 Inference Handler
-
-Created `inference.py` implementing the SageMaker inference protocol:
-
-```python
-def model_fn(model_dir):      # Load model artifacts from S3
-def input_fn(request_body):   # Parse JSON input
-def predict_fn(input_data):   # Generate predictions using sigmoid
-def output_fn(prediction):    # Format JSON response
-```
-
-#### 5.3 Deployment Process
-
-1. **Created SageMaker Notebook Instance** (ml.t3.medium)
-2. **Packaged Model Artifacts** into `model.tar.gz`
-3. **Uploaded to S3** bucket
-4. **Deployed SKLearnModel** to endpoint (ml.m5.large)
-
-#### 5.4 Deployment Evidence
-
-**SageMaker Notebook Instance Creation:**
-
-![SageMaker Notebook Instance](ASSETS/IMAGE1.jpeg)
-
-**Model Packaging and S3 Upload:**
-![Model Training](ASSETS/imagen2.png)
-
-
-**Model Training and Export in SageMaker:**
-
-![S3 Upload](ASSETS/imagen3.png)
-
-
-**Endpoint Testing with Sample Patient:**
-
-![Endpoint Deployment](ASSETS/imagen4.png)
-
-
-**inference.py:**
-![Endpoint Ready](ASSETS/imagen5.png)
-
-
-**Endpoint Status - InService:**
-
-![Endpoint Test](ASSETS/imagen6.png)
-
-#### 5.5 Endpoint Testing Results
-
-**Test Request (Age=60, High Risk Profile):**
-
-```json
-{
-    "Thallium": 7,
-    "Number of vessels fluro": 2,
-    "Chest pain type": 4,
-    "Exercise angina": 1,
-    "Sex": 1,
-    "Age": 60
-}
-```
-
-**Endpoint Response:**
-
-```json
-{
-    "probability": 0.9698097213922604,
-    "prediction": 1,
-    "risk_level": "High Risk"
-}
-```
-
-**Result:** Patient with Age=60 and high-risk factors has **96.98% probability** of heart disease.
-
-#### 5.6 Feature Input Format
-
-| Feature | Type | Values |
-|---------|------|--------|
-| Thallium | Integer | 3 (Normal), 6 (Fixed defect), 7 (Reversible defect) |
-| Number of vessels fluro | Integer | 0-3 |
-| Chest pain type | Integer | 1-4 (4 = Asymptomatic) |
-| Exercise angina | Integer | 0 (No), 1 (Yes) |
-| Sex | Integer | 0 (Female), 1 (Male) |
-| Age | Integer | Patient age in years |
-
-#### 5.7 Instance Types Explored
-
-| Instance Type | vCPU | Memory | Use Case |
-|--------------|------|--------|----------|
-| ml.t2.medium | 2 | 4 GB | Development/Testing |
-| ml.t3.medium | 2 | 4 GB | Notebook Instance |
-| ml.m5.large | 2 | 8 GB | Endpoint Deployment |
-
----
-
-## Results Summary
-
-### Model Coefficients Interpretation
-
-| Feature | Weight | Interpretation |
-|---------|--------|----------------|
-| Number of vessels fluro | +0.9169 | Strong positive - more blocked vessels increases risk |
-| Thallium | +0.7389 | Strong positive - higher values indicate higher risk |
-| Sex | +0.5938 | Moderate positive - males show higher risk |
-| Exercise angina | +0.4865 | Moderate positive - presence increases risk |
-| Chest pain type | +0.4709 | Moderate positive - certain pain types associated with disease |
-| Age | +0.2208 | Weak positive - slight risk increase with age |
-
-### Confusion Matrix (Test Set)
-
-```
-                Predicted 0    Predicted 1
-Actual 0            42              3
-Actual 1             6             30
-```
-
-- True Negatives: 42
-- False Positives: 3
-- False Negatives: 6
-- True Positives: 30
-
----
-
-## How to Run
-
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/Heart-Disease-Risk-Prediction.git
-cd Heart-Disease-Risk-Prediction
-```
-
-2. Create and activate a virtual environment (optional but recommended):
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Linux/Mac
-# or
-.venv\Scripts\activate     # Windows
+source .venv/bin/activate
 ```
 
-3. Install dependencies:
+Instalar dependencias mínimas:
+
 ```bash
 pip install numpy pandas matplotlib jupyter
 ```
 
-4. Launch Jupyter Notebook:
+Abrir el notebook:
+
 ```bash
 jupyter notebook heart_disease_lr_analysis.ipynb
 ```
 
-5. Run all cells sequentially to reproduce the analysis.
+Ejecutar las celdas en orden para reproducir el análisis y regenerar los artefactos del modelo.
 
----
+## Sustentación Oral
 
-## Requirements
+Los archivos de apoyo están en `docs/`:
 
-- Python 3.8+
-- NumPy
-- Pandas
-- Matplotlib
-- Jupyter Notebook
+- `docs/SUSTENTACION.md`: narrativa académica del proyecto, tendencia, problema, solución, usuarios e impacto.
+- `docs/GUION_ORAL.md`: guion listo para exposición oral.
+- `docs/PROMPT_GAMMA.md`: prompt para crear una presentación visual en Gamma.
 
-For SageMaker deployment:
-- boto3
-- sagemaker
-- AWS Account with SageMaker access
+## Fuentes de Contexto
 
----
-
+- OMS, enfermedades cardiovasculares: https://www.who.int/en/news-room/fact-sheets/detail/cardiovascular-diseases-%28cvds%29
+- OMS, ética y gobernanza de IA en salud: https://www.who.int/publications/i/item/9789240029200
+- NIST AI Risk Management Framework: https://www.nist.gov/itl/ai-risk-management-framework
+- NIST AI Research, características de IA confiable: https://www.nist.gov/ai-research
